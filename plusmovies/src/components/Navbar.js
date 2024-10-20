@@ -4,11 +4,11 @@ export default function Navbar({ search, setSearch }) {
         <
         nav className = "navbar navbar-expand-lg " >
         <
-        div className = "space d-flex align-items-center" > < a className = "navbar-brand"
-        href = "/" > Memovies < /a> <
+        div className = "space d-flex align-items-center" >
+        <
         form action = { "/search/" + search } >
         <
-        input autoComplete = 'false'
+        input autoComplete = 'off'
         type = "text"
         id = "search"
         placeholder = "Search for movies here"

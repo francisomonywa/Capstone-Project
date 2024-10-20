@@ -95,6 +95,9 @@ function App() {
     return ( <
         BrowserRouter >
         <
+        Navbar search = { search }
+        setSearch = { setSearch }
+        /> <
         Routes >
         <
         Route path = "/"
@@ -115,8 +118,6 @@ function App() {
             element = { <
                 >
                 <
-                Navbar / >
-                <
                 SeriesDetail search = { search }
                 setSearch = { setSearch }
                 imageSource = { imageSource }
@@ -127,8 +128,6 @@ function App() {
             Route path = "/movie/:id/:name"
             element = { <
                 >
-                <
-                Navbar / >
                 <
                 MovieDetail search = { search }
                 setSearch = { setSearch }
@@ -141,10 +140,8 @@ function App() {
             element = { <
                 >
                 <
-                Navbar search = { search }
-                setSearch = { setSearch }
-                /> <
                 MovieSearch imageSource = { imageSource }
+                setSearch = { setSearch }
                 search = { search }
                 /> <
                 />
