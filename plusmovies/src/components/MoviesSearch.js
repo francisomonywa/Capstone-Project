@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import './search.css'
 
-export default function Search({ imageSource }) {
+export default function MovieSearch({ imageSource }) {
 
     const { search } = useParams()
     const [searchResults, setResults] = useState([])
@@ -37,21 +37,14 @@ export default function Search({ imageSource }) {
         div className = "search-page ps-lg-5 pt-5" >
         <
         h2 className = "ps-5 ps-lg-0" > Search Results of < span > { search } < /span></h
-        2 >
-        <
-        div className = "form-check ps-5 ps-lg-0" >
-        <
-        input className = "form-check-input"
-        type = "checkbox"
-        value = ""
-        id = "flexCheckDefault"
-        onChange = { e => setAdult(!adult) }
-        /> <
-        label className = "form-check-label"
-        for = "flexCheckDefault" >
-        Show adult content <
-        /label> <
-        /div> <
+        2 > {
+            /* <div className="form-check ps-5 ps-lg-0">
+                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={e=>setAdult(!adult)}/>
+                            <label className="form-check-label" for="flexCheckDefault">
+                                Show adult content
+                            </label>
+                        </div> */
+        } <
         div className = "results d-flex justify-content-center flex-wrap" > {
             searchResults.map(result =>
                 result ? .poster_path !== null && ( <

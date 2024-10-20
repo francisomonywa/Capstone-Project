@@ -7,12 +7,16 @@ import React, { useEffect, useState } from 'react';
 import Home from './Components/Home';
 import MovieDetail from './Components/MovieDetail';
 import Navbar from './Components/Navbar';
-import Search from './Components/Search';
+import MovieSearch from './Components/MoviesSearch';
+import SeriesDetail from './Components/SeriesDetail';
 
 function App() {
 
     const [popularMovies, setPopularMovies] = useState([])
     const [upcoming, setUpcoming] = useState([])
+    const [popularSeries, setPopularSeries] = useState([])
+    const [topSeries, setTopSeries] = useState([])
+    const [seriesList, setSeriesList] = useState([])
     const [search, setSearch] = useState('');
     const [moviesList, setMoviesList] = useState([])
     const [viewAdult, setViewAdult] = useState(false)
@@ -26,19 +30,24 @@ function App() {
     };
 
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`)
-            .then(res => res.json())
-            .then(data => setPopularMovies(data.results))
-    }, [])
+        Promise.all([
+                fetch(`https://api.themoviedb.org/3/movie/popular?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`, options),
+                fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`, options),
+                fetch(`https://api.themoviedb.org/3/trending/tv/day?language=en-US`, options),
+                fetch(`https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=3`, options)
+            ])
+            .then(responses => Promise.all(responses.map(response => response.json())))
+            .then(([popularResponse, upcomingResponse, popSeriesResponse, topSeriesResponse]) => {
+                setPopularMovies(popularResponse.results);
+                setUpcoming(upcomingResponse.results);
+                setPopularSeries(popSeriesResponse.results);
+                setTopSeries(topSeriesResponse.results);
+            })
+            .catch(err => console.error(err));
+    }, []);
 
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`)
-            .then(res => res.json())
-            .then(data => setUpcoming(data.results))
-    }, [])
-
-    useEffect(() => {
-        const fetchPages = async() => {
+        const fetchMovies = async() => {
             const totalPages = 200;
             const fetchPromises = [];
 
@@ -56,10 +65,32 @@ function App() {
             }
         };
 
-        fetchPages();
+        fetchMovies();
     }, [viewAdult]);
 
-    console.log(moviesList)
+    useEffect(() => {
+        const fetchSeries = async() => {
+            const totalPages = 200;
+            const fetchPromises = [];
+
+            for (let page = 2; page <= totalPages; page++) {
+                const url = `https://api.themoviedb.org/3/tv/popular?language=en-US&page=${page}`;
+                fetchPromises.push(fetch(url, options).then(response => response.json()));
+            }
+
+            try {
+                const responses = await Promise.all(fetchPromises);
+                const combinedResults = responses.flatMap(response => response.results);
+                setSeriesList(combinedResults);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchSeries();
+    }, []);
+
+    console.log(seriesList)
 
     return ( <
         BrowserRouter >
@@ -67,7 +98,10 @@ function App() {
         Routes >
         <
         Route path = "/"
-        element = { < Home setViewAdult = { setViewAdult }
+        element = { < Home seriesList = { seriesList }
+            popularSeries = { popularSeries }
+            topSeries = { topSeries }
+            setViewAdult = { setViewAdult }
             viewAdult = { viewAdult }
             moviesList = { moviesList }
             search = { search }
@@ -77,6 +111,19 @@ function App() {
             imageSource = { imageSource }
             />}/ >
             <
+            Route path = "/series/:series_id/:name"
+            element = { <
+                >
+                <
+                Navbar / >
+                <
+                SeriesDetail search = { search }
+                setSearch = { setSearch }
+                imageSource = { imageSource }
+                /> <
+                />
+            }
+            /> <
             Route path = "/movie/:id/:name"
             element = { <
                 >
@@ -97,7 +144,7 @@ function App() {
                 Navbar search = { search }
                 setSearch = { setSearch }
                 /> <
-                Search imageSource = { imageSource }
+                MovieSearch imageSource = { imageSource }
                 search = { search }
                 /> <
                 />
