@@ -166,6 +166,10 @@ body {
     margin-bottom: -150px;
 }
 
+.category {
+    height: 41vh;
+}
+
 @media only screen and (min-width:1000px) {
     .categories {
         margin-top: -20vh;
@@ -183,10 +187,6 @@ body {
     .jumbotron {
         height: 110vh;
     }
-}
-
-.category {
-    height: 41vh;
 }
 
 .category-body {
