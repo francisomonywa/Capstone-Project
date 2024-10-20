@@ -69,8 +69,9 @@ function App() {
             element = { <
                 >
                 <
-                Navbar / >
-                <
+                Navbar search = { search }
+                setSearch = { setSearch }
+                /> <
                 Search imageSource = { imageSource }
                 search = { search }
                 popularMovies = { popularMovies }
