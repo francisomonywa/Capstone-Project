@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactPlayer from 'react-player';
 import '../css/style.css'
 
@@ -7,6 +7,8 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
     const [videoIndex, setVideoIndex] = useState(0)
     const videoPop = popularMovies[videoIndex]
     const [video, setVideo] = useState({})
+    const [paused, setPaused] = useState(false)
+    const videoRef = useRef(null)
 
     const options = {
         method: 'GET',
@@ -15,7 +17,7 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OGRjODQ1MDcwMDMyMDczOWJmY2M1MzdhMGNjMjgyOCIsInN1YiI6IjY0MjNkYjk5NjkwNWZiMDBiZDA4YWM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9FswfKJaJeW374o-VhH9k7qEQrrQnD7JZgolpoOrSeg'
         }
     };
-    console.log(videoPop ? .id)
+    console.log(videoPop)
 
     useEffect(() => {
         fetch(`https://api.themoviedb.org/3/movie/${videoPop?.id}/videos?language=en-US`, options)
@@ -24,8 +26,6 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 setVideo(data ? .results ? .find(result => result ? .type === "Trailer"))
             })
     }, [videoPop])
-
-    console.log(video)
 
     return ( <
         >
@@ -141,33 +141,11 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
         width = "100%"
         height = { window.screen.width > 600 ? "110%" : "60%" }
         onEnded = { e => setVideoIndex(videoIndex + 1) }
+        ref = { videoRef }
         /> <
         /div>
 
-        <
-        div className = 'video-captions row' >
-        <
-        div className = 'col-lg-4 col-md-6' >
-        <
-        h3 className = "fw-light text-white" > { videoPop ? .title } < /h3> <
-        p > { videoPop ? .overview } < /p> <
-        div className = 'caption-buttons' >
-        <
-        a href = { '/movie/' + videoPop ? .id + '/' + videoPop ? .title } > < button > < i class = "bi bi-play-circle-fill watch" > < /i> Watch Now</button > < /a> <
-        button > < i class = "bi bi-bookmark-plus" > < /i> Bookamrk</button >
-        <
-        /div> <
-        /div> <
-        div className = 'skip-buttons' >
-        <
-        button className = 'prev-button'
-        onClick = { e => setVideoIndex(videoIndex - 1) } > < i class = "bi bi-caret-left-fill" > < /i></button >
-        <
-        button className = 'next-button'
-        onClick = { e => setVideoIndex(videoIndex + 1) } > < i class = "bi bi-caret-right-fill" > < /i></button >
-        <
-        /div> <
-        /div>
+
 
         <
         /div> <
@@ -184,6 +162,33 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
         }
 
         <
+        /div> <
+        div className = { 'video-captions row' }
+        style = {
+            { display: !paused ? "flex" : "none" } } >
+        <
+        div className = 'col-lg-4 col-md-6' >
+        <
+        h4 className = "fw-normal text-white" > { videoPop ? .title } < /h4> <
+        p > { videoPop ? .overview } < /p> <
+        br / >
+        <
+        div className = 'caption-buttons' >
+        <
+        a href = { '/movie/' + videoPop ? .id + '/' + videoPop ? .title } > < button > < i class = "bi bi-play-circle-fill watch" > < /i> Watch Now</button > < /a> <
+        button > < i class = "bi bi-bookmark-plus" > < /i> Bookamrk</button >
+        <
+        /div> <
+        /div> <
+        div className = 'skip-buttons' >
+        <
+        button className = 'prev-button'
+        onClick = { e => setVideoIndex(videoIndex - 1) } > < i class = "bi bi-caret-left-fill" > < /i></button >
+        <
+        button className = 'next-button'
+        onClick = { e => setVideoIndex(videoIndex + 1) } > < i class = "bi bi-caret-right-fill" > < /i></button >
+        <
+        /div> <
         /div> <
         /div>
 
