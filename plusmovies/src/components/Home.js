@@ -105,7 +105,6 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
         div className = "container texts" >
 
         <
-        h1 className = "intro-header" > Welcome to Memovies < /h1> <
         form action = { "/search/" + search } >
         <
         input type = "text"
@@ -137,7 +136,6 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 <
                 a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
                 alt = "${result?.title}" / > < /a> <
-                p className = "title" > { movie ? .title } < /p> <
                 /div>
             )
         } <
@@ -154,10 +152,8 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 div className = "movie-card"
                 key = { movie ? .id } >
                 <
-                img src = { imageSource + movie ? .poster_path }
-                alt = "${result?.title}" / >
-                <
-                p className = "title" > { movie ? .title } < /p> <
+                a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
+                alt = "${result?.title}" / > < /a> <
                 /div>
             )
         } <
@@ -174,10 +170,8 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 div className = "movie-card"
                 key = { movie ? .id } >
                 <
-                img src = { imageSource + movie ? .poster_path }
-                alt = "${result?.title}" / >
-                <
-                p className = "title" > { movie ? .title } < /p> <
+                a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
+                alt = "${result?.title}" / > < /a> <
                 /div>
             )
         } <

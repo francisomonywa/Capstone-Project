@@ -71,11 +71,11 @@ function App() {
                 <
                 Navbar / >
                 <
-                Search search = { search }
+                Search imageSource = { imageSource }
+                search = { search }
                 popularMovies = { popularMovies }
                 topRated = { topRated }
                 upcoming = { upcoming }
-                imageSource = { imageSource }
                 /> <
                 />
             }

@@ -5,6 +5,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: black;
     color: white;
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -60,7 +61,7 @@ body {
 }
 
 #search {
-    height: 50px;
+    height: 60px;
     width: 600px;
     border: 1px solid rgba(128, 128, 128, 0.259);
     border-radius: 10px;
@@ -68,10 +69,11 @@ body {
     color: rgb(60, 60, 60);
     margin-top: 10px;
     padding-left: 10px;
+    outline: none;
 }
 
 .search {
-    height: 50px;
+    height: 60px;
     width: 150px;
     border-radius: 10px;
     background-color: rgb(159, 0, 8);
@@ -79,6 +81,7 @@ body {
     outline: none;
     color: white;
     font-size: 16px;
+    margin-left: 10px;
 }
 
 .search:hover {
@@ -113,7 +116,7 @@ body {
 }
 
 .category {
-    height: 65vh;
+    height: 50vh;
 }
 
 .category-body {
@@ -158,12 +161,17 @@ img:hover {
         font-size: 35px;
     }
     #search {
-        width: 330px;
+        width: 250px;
+        height: 50px;
         margin-bottom: 10px;
+    }
+    .search {
+        width: 90px;
+        height: 50px;
     }
     .texts {
         position: relative;
-        bottom: 320px;
+        bottom: 40vh;
         left: 10px;
     }
     .space {
