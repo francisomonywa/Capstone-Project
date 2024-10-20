@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import ReactPlayer from 'react-player';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import '../css/style.css'
 
-export default function Home({ popularMovies, topRated, upcoming, imageSource, search, setSearch }) {
+export default function Home({ popularMovies, upcoming, imageSource, search, setSearch, setViewAdult, viewAdult, moviesList }) {
 
     const [videoIndex, setVideoIndex] = useState(0)
     const videoPop = popularMovies[videoIndex]
     const [video, setVideo] = useState({})
-    const [paused, setPaused] = useState(false)
     const videoRef = useRef(null)
 
     const options = {
@@ -17,7 +17,6 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OGRjODQ1MDcwMDMyMDczOWJmY2M1MzdhMGNjMjgyOCIsInN1YiI6IjY0MjNkYjk5NjkwNWZiMDBiZDA4YWM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9FswfKJaJeW374o-VhH9k7qEQrrQnD7JZgolpoOrSeg'
         }
     };
-    console.log(videoPop)
 
     useEffect(() => {
         fetch(`https://api.themoviedb.org/3/movie/${videoPop?.id}/videos?language=en-US`, options)
@@ -26,6 +25,11 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 setVideo(data ? .results ? .find(result => result ? .type === "Trailer"))
             })
     }, [videoPop])
+
+    const handleVideoError = () => {
+        console.error('Video loading error');
+        setVideoIndex(videoIndex + 1)
+    };
 
     return ( <
         >
@@ -141,6 +145,7 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
         width = "100%"
         height = { window.screen.width > 600 ? "110%" : "60%" }
         onEnded = { e => setVideoIndex(videoIndex + 1) }
+        onError = { handleVideoError }
         ref = { videoRef }
         /> <
         /div>
@@ -163,9 +168,7 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
 
         <
         /div> <
-        div className = { 'video-captions row' }
-        style = {
-            { display: !paused ? "flex" : "none" } } >
+        div className = { 'video-captions row' } >
         <
         div className = 'col-lg-4 col-md-6' >
         <
@@ -208,26 +211,9 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 div className = "movie-card"
                 key = { movie ? .id } >
                 <
-                a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
-                alt = "${result?.title}" / > < /a> <
-                /div>
-            )
-        } <
-        /div> <
-        /div>
-
-        <
-        div className = "category" >
-        <
-        h3 > Top rated < /h3> <
-        div className = "category-body top-rated" > {
-            topRated.map(movie =>
-                <
-                div className = "movie-card"
-                key = { movie ? .id } >
-                <
-                a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
-                alt = "${result?.title}" / > < /a> <
+                a href = { '/movie/' + movie ? .id + '/' + movie ? .title } > < LazyLoadImage src = { imageSource + movie ? .poster_path }
+                alt = "${result?.title}"
+                loading = "lazy" / > < /a> <
                 /div>
             )
         } <
@@ -244,8 +230,41 @@ export default function Home({ popularMovies, topRated, upcoming, imageSource, s
                 div className = "movie-card"
                 key = { movie ? .id } >
                 <
-                a href = { '/movie/' + movie.id + '/' + movie ? .title } > < img src = { imageSource + movie ? .poster_path }
-                alt = "${result?.title}" / > < /a> <
+                a href = { '/movie/' + movie ? .id + '/' + movie ? .title } > < LazyLoadImage src = { imageSource + movie ? .poster_path }
+                alt = "${result?.title}"
+                loading = "lazy" / > < /a> <
+                /div>
+            )
+        } <
+        /div> <
+        /div>
+
+        <
+        div className = 'movies-list-section' >
+        <
+        h3 className = "first" > Recommendations < /h3> <
+        div className = "form-check text-secondary ps-5 ps-lg-5" >
+        <
+        input className = "form-check-input"
+        type = "checkbox"
+        value = ""
+        id = "flexCheckDefault"
+        onChange = { e => setViewAdult(!viewAdult) }
+        /> <
+        label className = "form-check-label"
+        for = "flexCheckDefault" >
+        Show adult content <
+        /label> <
+        /div> <
+        div className = 'results d-flex justify-content-center flex-wrap' > {
+            moviesList.map(movie =>
+                <
+                div className = "movie-card movie-result"
+                key = { movie ? .id } >
+                <
+                a href = { '/movie/' + movie ? .id + '/' + movie ? .title } > < LazyLoadImage src = { imageSource + movie ? .poster_path }
+                alt = "${result?.title}"
+                loading = 'lazy' / > < /a> <
                 /div>
             )
         } <
