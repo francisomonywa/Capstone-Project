@@ -12,10 +12,22 @@ import Search from './Components/Search';
 function App() {
 
     const [popularMovies, setPopularMovies] = useState([])
-    const [topRated, setTopRated] = useState([])
     const [upcoming, setUpcoming] = useState([])
     const [search, setSearch] = useState('');
+    const [moviesList, setMoviesList] = useState([])
+    const [pagesTotal, setPagesTotal] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [viewAdult, setViewAdult] = useState(false)
+    let pages = []
     const imageSource = 'https://image.tmdb.org/t/p/w500'
+
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0OGRjODQ1MDcwMDMyMDczOWJmY2M1MzdhMGNjMjgyOCIsInN1YiI6IjY0MjNkYjk5NjkwNWZiMDBiZDA4YWM2YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.9FswfKJaJeW374o-VhH9k7qEQrrQnD7JZgolpoOrSeg'
+        }
+    };
 
     useEffect(() => {
         fetch(`https://api.themoviedb.org/3/movie/popular?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`)
@@ -24,16 +36,24 @@ function App() {
     }, [])
 
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`)
-            .then(res => res.json())
-            .then(data => setTopRated(data.results))
-    }, [])
-
-    useEffect(() => {
         fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=48dc8450700320739bfcc537a0cc2828&language=en-US&page=1`)
             .then(res => res.json())
             .then(data => setUpcoming(data.results))
     }, [])
+
+    useEffect(() => {
+        fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=${viewAdult}&include_video=true&language=en-US&page=${currentPage}&sort_by=popularity.desc`, options)
+            .then(response => response.json())
+            .then(response => {
+                setPagesTotal(response.total_pages)
+                setMoviesList(response.results)
+            })
+            .catch(err => console.error(err));
+    }, [currentPage, viewAdult])
+
+    for (let i = 1; i <= pagesTotal; i++) {
+        pages.push(i)
+    }
 
     return ( <
         BrowserRouter >
@@ -41,10 +61,15 @@ function App() {
         Routes >
         <
         Route path = "/"
-        element = { < Home search = { search }
+        element = { < Home setViewAdult = { setViewAdult }
+            viewAdult = { viewAdult }
+            setCurrentPage = { setCurrentPage }
+            currentPage = { currentPage }
+            moviesList = { moviesList }
+            pages = { pages }
+            search = { search }
             setSearch = { setSearch }
             popularMovies = { popularMovies }
-            topRated = { topRated }
             upcoming = { upcoming }
             imageSource = { imageSource }
             />}/ >
@@ -58,7 +83,6 @@ function App() {
                 MovieDetail search = { search }
                 setSearch = { setSearch }
                 popularMovies = { popularMovies }
-                topRated = { topRated }
                 upcoming = { upcoming }
                 imageSource = { imageSource }
                 /> <
@@ -75,7 +99,6 @@ function App() {
                 Search imageSource = { imageSource }
                 search = { search }
                 popularMovies = { popularMovies }
-                topRated = { topRated }
                 upcoming = { upcoming }
                 /> <
                 />
